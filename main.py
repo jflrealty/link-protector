@@ -4,8 +4,11 @@ from starlette.middleware.sessions import SessionMiddleware
 import httpx, os
 
 app = FastAPI()
-app.add_middleware(SessionMiddleware, secret_key="super-secret")
 
+# Usa envvar pra secret key
+app.add_middleware(SessionMiddleware, secret_key=os.getenv("SESSION_SECRET", "fallback-secret"))
+
+# Variáveis de ambiente
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 TENANT_ID = os.getenv("TENANT_ID")
@@ -13,6 +16,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 ALLOWED_DOMAIN = os.getenv("ALLOWED_DOMAIN")
 BI_REDIRECT_URL = os.getenv("BI_REDIRECT_URL")
 
+# URLs da Microsoft
 AUTH_URL = f"https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/authorize"
 TOKEN_URL = f"https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/token"
 SCOPE = "https://graph.microsoft.com/User.Read"
